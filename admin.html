@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReplitSuperHero.com Admin Dashboard</title>
+    <link rel="canonical" href="https://replitsuperhero.com/admin.html">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-P2C3KN7T');</script>
+    <!-- End Google Tag Manager -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background-color: #141414;
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-container h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #FF6B35;
+        }
+
+        .login-container p {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #0A0A0A;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #FFFFFF;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FF6B35;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #FF8552;
+        }
+
+        .error-message {
+            color: #FF6B35;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+            padding: 12px;
+            background-color: rgba(255, 107, 53, 0.1);
+            border-radius: 4px;
+            border-left: 3px solid #FF6B35;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            width: 100%;
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .navbar {
+            background-color: #141414;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+
+        .navbar h1 {
+            font-size: 20px;
+            color: #FF6B35;
+        }
+
+        .logout-btn {
+            background-color: #FF6B35;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #FF8552;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background-color: #141414;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #FF6B35;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF6B35;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+        }
+
+        .search-box {
+            background-color: #141414;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            background-color: #0A0A0A;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        .leads-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #141414;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .leads-table thead {
+            background-color: #0A0A0A;
+        }
+
+        .leads-table th {
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #FF6B35;
+            border-bottom: 1px solid #333;
+        }
+
+        .leads-table td {
+            padding: 16px;
+            border-bottom: 1px solid #333;
+            font-size: 14px;
+        }
+
+        .leads-table tr:hover {
+            background-color: #1A1A1A;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .site-card {
+            background-color: #141414;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            transition: border-color 0.3s;
+        }
+
+        .site-card:hover {
+            border-color: #FF6B35;
+        }
+
+        .site-card h3 {
+            color: #FF6B35;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .site-card p {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .site-card a {
+            color: #FF6B35;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .site-card a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sites-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .leads-table {
+                font-size: 12px;
+            }
+
+            .leads-table th, .leads-table td {
+                padding: 12px 8px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P2C3KN7T"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Login Form -->
+    <div class="login-container" id="loginContainer">
+        <h1>ReplitSuperHero.com</h1>
+        <p>Cloud Development Platform</p>
+        <div class="error-message" id="errorMessage"></div>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="navbar">
+            <h1>ReplitSuperHero.com Admin Dashboard</h1>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <div class="container">
+            <!-- Stats Section -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Leads</h3>
+                    <div class="value" id="totalLeads">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Leads Today</h3>
+                    <div class="value" id="leadsToday">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Leads This Week</h3>
+                    <div class="value" id="leadsThisWeek">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Conversion Rate</h3>
+                    <div class="value" id="conversionRate">0%</div>
+                </div>
+            </div>
+
+            <!-- Leads Section -->
+            <div class="section">
+                <h2>Leads</h2>
+                <div class="search-box">
+                    <input type="text" id="searchBox" placeholder="Search leads by name or email..." onkeyup="filterLeads()">
+                </div>
+                <div id="leadsContainer">
+                    <div class="loading">Loading leads...</div>
+                </div>
+            </div>
+
+            <!-- Site Overview Section -->
+            <div class="section">
+                <h2>SuperHero Network Overview</h2>
+                <div class="sites-grid" id="sitesGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_ENDPOINT = 'https://super-hero-api.replit.app/api/leads';
+        const VALID_USERNAME = 'Jarvis.Stark1985';
+        const VALID_PASSWORD = 'Superhero2026$';
+
+        const SITES = [
+            { name: 'TheAISuperHeroes.com', url: 'https://theaisuperheroes.com' },
+            { name: 'ResumeSuperHero.com', url: 'https://resumesuperhero.com' },
+            { name: 'ShopifySuperHero.com', url: 'https://shopifysuperhero.com' },
+            { name: 'SEOAISuperHero.com', url: 'https://seoaisuperhero.com' },
+            { name: 'MCPSuperHero.com', url: 'https://mcpsuperhero.com' },
+            { name: 'ReplitSuperHero.com', url: 'https://replitsuperhero.com' },
+            { name: 'ClaudSuperHero.com', url: 'https://claudsuperhero.com' },
+            { name: 'AgenticSuperHero.com', url: 'https://agenticsuperhero.com' },
+            { name: 'URLSuperHero.com', url: 'https://urlsuperhero.com' },
+            { name: 'StartBizSuperHero.com', url: 'https://startbizsuperhero.com' }
+        ];
+
+        let allLeads = [];
+        let filteredLeads = [];
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showDashboard();
+                fetchLeads();
+                renderSites();
+            } else {
+                showError('Invalid username or password');
+            }
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+            setTimeout(() => {
+                errorEl.classList.remove('show');
+            }, 4000);
+        }
+
+        function showDashboard() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+        }
+
+        function hideDashboard() {
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('adminLoggedIn');
+            hideDashboard();
+        }
+
+        async function fetchLeads() {
+            try {
+                const response = await fetch(API_ENDPOINT);
+                if (!response.ok) throw new Error('API request failed');
+                const data = await response.json();
+                allLeads = Array.isArray(data) ? data : data.leads || [];
+                filteredLeads = allLeads;
+                updateStats();
+                renderLeads();
+            } catch (error) {
+                console.error('Failed to fetch leads:', error);
+                document.getElementById('leadsContainer').innerHTML =
+                    '<div class="empty-state">Failed to load leads. API unavailable.</div>';
+            }
+        }
+
+        function updateStats() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+
+            const leadsToday = allLeads.filter(lead => {
+                const leadDate = new Date(lead.createdAt || lead.date || 0);
+                return leadDate >= today;
+            }).length;
+
+            const leadsThisWeek = allLeads.filter(lead => {
+                const leadDate = new Date(lead.createdAt || lead.date || 0);
+                return leadDate >= weekAgo;
+            }).length;
+
+            const conversionRate = allLeads.length > 0 ?
+                ((allLeads.filter(l => l.converted).length / allLeads.length) * 100).toFixed(1) : 0;
+
+            document.getElementById('totalLeads').textContent = allLeads.length;
+            document.getElementById('leadsToday').textContent = leadsToday;
+            document.getElementById('leadsThisWeek').textContent = leadsThisWeek;
+            document.getElementById('conversionRate').textContent = conversionRate + '%';
+        }
+
+        function renderLeads() {
+            const container = document.getElementById('leadsContainer');
+
+            if (filteredLeads.length === 0) {
+                container.innerHTML = '<div class="empty-state">No leads found.</div>';
+                return;
+            }
+
+            let html = '<table class="leads-table"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead><tbody>';
+
+            filteredLeads.forEach(lead => {
+                const status = lead.converted ? 'Converted' : 'Pending';
+                html += `<tr>
+                    <td>${lead.name || 'N/A'}</td>
+                    <td>${lead.email || 'N/A'}</td>
+                    <td>${lead.phone || 'N/A'}</td>
+                    <td><span style="color: ${status === 'Converted' ? '#FF6B35' : '#999'}">${status}</span></td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function filterLeads() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            filteredLeads = allLeads.filter(lead => {
+                const name = (lead.name || '').toLowerCase();
+                const email = (lead.email || '').toLowerCase();
+                return name.includes(searchTerm) || email.includes(searchTerm);
+            });
+            renderLeads();
+        }
+
+        function renderSites() {
+            const grid = document.getElementById('sitesGrid');
+            grid.innerHTML = SITES.map(site => `
+                <div class="site-card">
+                    <h3>${site.name}</h3>
+                    <p>SuperHero Network Partner</p>
+                    <a href="${site.url}" target="_blank">Visit Site â</a>
+                </div>
+            `).join('');
+        }
+
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                showDashboard();
+                fetchLeads();
+                renderSites();
+            }
+        });
+    </script>
+</body>
+</html>
